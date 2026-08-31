@@ -74,6 +74,14 @@ export const sampleStudySet: StudySet = {
       correctAnswer: "B",
       explanation: "Big-O expresses how cost scales as input grows.",
     },
+    {
+      id: "q_5",
+      difficulty: "hard",
+      question: "Osmosis moves water toward the side with…",
+      options: { A: "Lower solute concentration", B: "Higher solute concentration", C: "Equal pressure", D: "Less surface area" },
+      correctAnswer: "B",
+      explanation: "Water crosses the membrane toward the higher solute concentration.",
+    },
   ],
   warnings: [],
 };
