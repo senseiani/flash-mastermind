@@ -21,7 +21,7 @@ function QuizPage() {
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
 
-  const q = quizQuestions[index];
+  const q = quizQuestions[index]!;
   const progress = ((index + 1) / quizQuestions.length) * 100;
 
   const restart = () => {

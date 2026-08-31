@@ -18,7 +18,7 @@ export const Route = createFileRoute("/flashcards")({
 function FlashcardsPage() {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const card = flashcards[index];
+  const card = flashcards[index]!;
   const progress = ((index + 1) / flashcards.length) * 100;
 
   const go = (delta: number) => {
