@@ -31,6 +31,10 @@ export const sampleStudySet: StudySet = {
     { id: "fc_4", question: "What is Big-O notation?", answer: "A way to describe how an algorithm's cost grows with input size." },
     { id: "fc_5", question: "What is photosynthesis?", answer: "Plants converting light, CO2 and water into glucose and oxygen." },
     { id: "fc_6", question: "State Newton's 2nd law", answer: "Force equals mass times acceleration (F = ma)." },
+    { id: "fc_7", question: "What is DNA?", answer: "The molecule carrying genetic instructions in living organisms." },
+    { id: "fc_8", question: "What is an algorithm?", answer: "A finite, ordered set of steps that solves a problem." },
+    { id: "fc_9", question: "Define velocity", answer: "The rate of change of position, including direction." },
+    { id: "fc_10", question: "What is osmosis?", answer: "Water moving across a membrane toward higher solute concentration." },
   ],
   quiz: [
     {
@@ -69,6 +73,14 @@ export const sampleStudySet: StudySet = {
       },
       correctAnswer: "B",
       explanation: "Big-O expresses how cost scales as input grows.",
+    },
+    {
+      id: "q_5",
+      difficulty: "hard",
+      question: "Osmosis moves water toward the side with…",
+      options: { A: "Lower solute concentration", B: "Higher solute concentration", C: "Equal pressure", D: "Less surface area" },
+      correctAnswer: "B",
+      explanation: "Water crosses the membrane toward the higher solute concentration.",
     },
   ],
   warnings: [],
