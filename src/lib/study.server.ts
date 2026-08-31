@@ -16,9 +16,13 @@ Reply with ONLY raw JSON (no markdown fences) in exactly this shape:
   }],
   "warnings": []
 }
-Rules: 8-12 flashcards and 5-8 quiz questions when the notes allow it; ids sequential (fc_1, q_1, ...);
-difficulty is one of easy | medium | hard; correctAnswer is one of A, B, C, D;
-put any issues (notes too short, off-topic, ambiguous) as short strings in "warnings".`;
+Hard rules:
+- EXACTLY 10 flashcards and EXACTLY 5 quiz questions. Never fewer, never more.
+- Every quiz question has EXACTLY 4 options keyed A, B, C, D, all distinct, and EXACTLY one correct answer.
+- "difficulty" must be one of easy | medium | hard for every question.
+- ids sequential: fc_1..fc_10 and q_1..q_5.
+- Use ONLY information contained in the user's notes. Do not invent facts or add outside knowledge.
+- Put any issues (notes too short, off-topic, ambiguous) as short strings in "warnings".`;
 
 function extractJson(text: string): unknown {
   const cleaned = text.trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
