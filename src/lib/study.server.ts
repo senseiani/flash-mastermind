@@ -89,12 +89,22 @@ export async function buildStudySet(notes: string): Promise<StudySet> {
   if (!key) throw new Error("Missing LOVABLE_API_KEY");
 
   const gateway = createLovableAiGatewayProvider(key);
-  const result = streamText({
-    model: gateway("google/gemini-3.7-flash"),
-    system: SYSTEM_PROMPT,
-    prompt: `Notes:\n\n${notes.slice(0, 20000)}`,
-  });
 
-  const text = await result.text;
-  return normalize(extractJson(text));
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const result = streamText({
+      model: gateway("google/gemini-3.7-flash"),
+      system: SYSTEM_PROMPT,
+      prompt:
+        `Notes:\n\n${notes.slice(0, 20000)}\n\n` +
+        `Return exactly ${REQUIRED_FLASHCARDS} flashcards and exactly ${REQUIRED_QUIZ} quiz questions, using only the notes above.`,
+    });
+    try {
+      const text = await result.text;
+      return normalize(extractJson(text));
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("The AI could not build study material from those notes.");
 }

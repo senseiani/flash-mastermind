@@ -42,7 +42,7 @@ function FlashcardsPage() {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <span className="truncate text-sm text-muted-foreground">
-          Card {Math.min(index + 1, cards.length)} of {cards.length}
+          Card {Math.min(index + 1, cards.length)}/{cards.length}
         </span>
       </div>
 

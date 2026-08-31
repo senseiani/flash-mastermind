@@ -99,7 +99,7 @@ function QuizPage() {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <span className="truncate text-sm text-muted-foreground">
-          Question {index + 1} of {questions.length} · {q.difficulty}
+          Question {index + 1}/{questions.length} · {q.difficulty}
         </span>
       </div>
 
