@@ -210,8 +210,7 @@ function QuizPage() {
       <button
         onClick={next}
         disabled={!revealed}
-        className="mt-auto w-full rounded-2xl bg-accent px-5 py-4 pt-4 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 active:opacity-80 disabled:pointer-events-none disabled:opacity-40"
-        style={{ marginTop: "auto" }}
+        className="mt-auto w-full rounded-2xl bg-accent px-5 py-4 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 active:opacity-80 disabled:pointer-events-none disabled:opacity-40"
       >
         {index === questions.length - 1 ? "See score" : "Next question"}
       </button>
