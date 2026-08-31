@@ -1,6 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Sparkles, Layers, ListChecks } from "lucide-react";
+import { Sparkles, Layers, ListChecks, Loader2, AlertTriangle } from "lucide-react";
+import { generateStudySet } from "@/lib/study.functions";
+import { saveStudySet } from "@/lib/study-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -9,12 +12,12 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Paste your notes and instantly study them as flip flashcards and multiple-choice quizzes. Minimal, dark, mobile-first.",
+          "Paste your notes and instantly get AI-generated flip flashcards and multiple-choice quizzes. Minimal, dark, mobile-first.",
       },
       { property: "og:title", content: "FlashGenius — Turn notes into flashcards & quizzes" },
       {
         property: "og:description",
-        content: "Paste notes, get flashcards and quizzes. A focused, dark, mobile-first study app.",
+        content: "Paste notes, get AI flashcards and quizzes. A focused, dark, mobile-first study app.",
       },
     ],
   }),
@@ -23,7 +26,28 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [notes, setNotes] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const generate = useServerFn(generateStudySet);
+
+  const onGenerate = async () => {
+    setError(null);
+    if (notes.trim().length < 20) {
+      setError("Add a bit more text — at least a couple of sentences.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const set = await generate({ data: { notes: notes.trim() } });
+      saveStudySet(set);
+      navigate({ to: "/flashcards" });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong generating your study set.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col px-5 pb-16 pt-14">
@@ -45,18 +69,29 @@ function Index() {
         id="notes"
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
+        disabled={loading}
         placeholder="Paste lecture notes, a chapter summary, or anything you need to memorise…"
-        className="mt-2 min-h-52 w-full resize-y rounded-2xl border border-border bg-card p-4 text-sm leading-relaxed text-foreground outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-accent"
+        className="mt-2 min-h-52 w-full resize-y rounded-2xl border border-border bg-card p-4 text-sm leading-relaxed text-foreground outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-accent disabled:opacity-60"
       />
 
       <button
-        onClick={() => navigate({ to: "/flashcards" })}
-        className="mt-4 w-full rounded-2xl bg-accent px-5 py-4 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 active:opacity-80"
+        onClick={onGenerate}
+        disabled={loading}
+        className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-accent px-5 py-4 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-60"
       >
-        Generate
+        {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+        {loading ? "Generating…" : "Generate"}
       </button>
+
+      {error && (
+        <p className="mt-3 flex items-start gap-2 rounded-2xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-xs text-foreground">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+          <span className="min-w-0">{error}</span>
+        </p>
+      )}
+
       <p className="mt-3 text-center text-xs text-muted-foreground">
-        Demo mode — sample cards are used for now.
+        Cards and quiz are written by AI from your notes.
       </p>
 
       <div className="mt-10 grid gap-3">
@@ -67,7 +102,7 @@ function Index() {
           <Layers className="h-5 w-5 shrink-0 text-accent" />
           <span className="min-w-0">
             <span className="block text-sm font-medium text-foreground">Flashcards</span>
-            <span className="block text-xs text-muted-foreground">10 cards · tap to flip</span>
+            <span className="block text-xs text-muted-foreground">Tap a card to flip</span>
           </span>
         </Link>
         <Link
@@ -77,7 +112,7 @@ function Index() {
           <ListChecks className="h-5 w-5 shrink-0 text-accent" />
           <span className="min-w-0">
             <span className="block text-sm font-medium text-foreground">Quiz</span>
-            <span className="block text-xs text-muted-foreground">6 questions · instant feedback</span>
+            <span className="block text-xs text-muted-foreground">Instant feedback + score</span>
           </span>
         </Link>
       </div>
