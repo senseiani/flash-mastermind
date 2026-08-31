@@ -1,65 +1,99 @@
-export type Flashcard = { id: number; front: string; back: string };
-
-export type QuizQuestion = {
-  id: number;
+export type Flashcard = {
+  id: string;
   question: string;
-  options: string[];
-  answerIndex: number;
+  answer: string;
 };
 
-export const flashcards: Flashcard[] = [
-  { id: 1, front: "What is mitosis?", back: "Cell division producing two genetically identical daughter cells." },
-  { id: 2, front: "Define entropy", back: "A measure of disorder or unavailable energy in a closed system." },
-  { id: 3, front: "What is Big-O notation?", back: "A way to describe how an algorithm's cost grows with input size." },
-  { id: 4, front: "Who wrote 'The Republic'?", back: "Plato, around 375 BCE." },
-  { id: 5, front: "What is a mole (chemistry)?", back: "6.022 x 10^23 particles — Avogadro's number." },
-  { id: 6, front: "Define opportunity cost", back: "The value of the next-best alternative you gave up." },
-  { id: 7, front: "What does DNS do?", back: "Translates human-readable domain names into IP addresses." },
-  { id: 8, front: "State Newton's 2nd law", back: "Force equals mass times acceleration (F = ma)." },
-  { id: 9, front: "What is photosynthesis?", back: "Plants converting light, CO2 and water into glucose and oxygen." },
-  { id: 10, front: "Define inflation", back: "A sustained rise in the general price level, reducing purchasing power." },
-];
+export type QuizQuestion = {
+  id: string;
+  difficulty: "easy" | "medium" | "hard";
+  question: string;
+  options: Record<string, string>;
+  correctAnswer: string;
+  explanation: string;
+};
 
-export const quizQuestions: QuizQuestion[] = [
-  {
-    id: 1,
-    question: "Mitosis produces how many daughter cells?",
-    options: ["One", "Two", "Four", "Eight"],
-    answerIndex: 1,
-  },
-  {
-    id: 2,
-    question: "Entropy is best described as a measure of…",
-    options: ["Temperature", "Pressure", "Disorder", "Mass"],
-    answerIndex: 2,
-  },
-  {
-    id: 3,
-    question: "Big-O notation describes…",
-    options: [
-      "Exact runtime in seconds",
-      "Growth of cost with input size",
-      "Memory chip layout",
-      "Compiler warnings",
-    ],
-    answerIndex: 1,
-  },
-  {
-    id: 4,
-    question: "Who wrote 'The Republic'?",
-    options: ["Aristotle", "Socrates", "Plato", "Homer"],
-    answerIndex: 2,
-  },
-  {
-    id: 5,
-    question: "Avogadro's number is approximately…",
-    options: ["3.14 x 10^8", "6.022 x 10^23", "9.81 x 10^2", "1.6 x 10^-19"],
-    answerIndex: 1,
-  },
-  {
-    id: 6,
-    question: "Newton's second law states that…",
-    options: ["F = ma", "E = mc^2", "PV = nRT", "a^2 + b^2 = c^2"],
-    answerIndex: 0,
-  },
-];
+export type StudySet = {
+  flashcards: Flashcard[];
+  quiz: QuizQuestion[];
+  warnings: string[];
+};
+
+export const sampleStudySet: StudySet = {
+  flashcards: [
+    {
+      id: "fc_1",
+      question: "What is the powerhouse of the cell?",
+      answer: "The mitochondria, because it generates ATP through cellular respiration.",
+    },
+    { id: "fc_2", question: "What is mitosis?", answer: "Cell division producing two genetically identical daughter cells." },
+    { id: "fc_3", question: "Define entropy", answer: "A measure of disorder or unavailable energy in a closed system." },
+    { id: "fc_4", question: "What is Big-O notation?", answer: "A way to describe how an algorithm's cost grows with input size." },
+    { id: "fc_5", question: "What is photosynthesis?", answer: "Plants converting light, CO2 and water into glucose and oxygen." },
+    { id: "fc_6", question: "State Newton's 2nd law", answer: "Force equals mass times acceleration (F = ma)." },
+  ],
+  quiz: [
+    {
+      id: "q_1",
+      difficulty: "easy",
+      question: "Which organelle produces ATP?",
+      options: { A: "Nucleus", B: "Mitochondria", C: "Ribosome", D: "Golgi apparatus" },
+      correctAnswer: "B",
+      explanation: "Mitochondria carry out cellular respiration, which produces ATP.",
+    },
+    {
+      id: "q_2",
+      difficulty: "easy",
+      question: "Mitosis produces how many daughter cells?",
+      options: { A: "One", B: "Two", C: "Four", D: "Eight" },
+      correctAnswer: "B",
+      explanation: "Mitosis splits one cell into two identical daughter cells.",
+    },
+    {
+      id: "q_3",
+      difficulty: "medium",
+      question: "Entropy is best described as a measure of…",
+      options: { A: "Temperature", B: "Pressure", C: "Disorder", D: "Mass" },
+      correctAnswer: "C",
+      explanation: "Entropy quantifies disorder or unavailable energy in a system.",
+    },
+    {
+      id: "q_4",
+      difficulty: "medium",
+      question: "Big-O notation describes…",
+      options: {
+        A: "Exact runtime in seconds",
+        B: "Growth of cost with input size",
+        C: "Memory chip layout",
+        D: "Compiler warnings",
+      },
+      correctAnswer: "B",
+      explanation: "Big-O expresses how cost scales as input grows.",
+    },
+  ],
+  warnings: [],
+};
+
+const STORAGE_KEY = "flashgenius:study-set";
+
+export function saveStudySet(set: StudySet) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(set));
+}
+
+export function loadStudySet(): StudySet {
+  if (typeof window === "undefined") return sampleStudySet;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return sampleStudySet;
+    const parsed = JSON.parse(raw) as StudySet;
+    if (!parsed?.flashcards?.length && !parsed?.quiz?.length) return sampleStudySet;
+    return {
+      flashcards: parsed.flashcards ?? [],
+      quiz: parsed.quiz ?? [],
+      warnings: parsed.warnings ?? [],
+    };
+  } catch {
+    return sampleStudySet;
+  }
+}
