@@ -1,42 +1,53 @@
-# Study Smarter
+# FlashGenius — AI Flashcard & Quiz Generator
 
-Build a study app called "FlashGenius" with:
+## Overview
 
-- A clean landing page with a large textarea to
+FlashGenius is an AI-powered study web application that converts a student's study notes into interactive flashcards and a multiple-choice quiz.
 
-  paste notes and a "Generate" button
+## Features
 
-- A flashcards screen: cards flip on click,
+- Generate exactly 10 AI-powered flashcards from study notes
+- Generate exactly 5 multiple-choice questions
+- Four answer options (A, B, C, D) for every question
+- Easy, Medium, and Hard quiz difficulty levels
+- Interactive 3D flashcard flipping
+- Instant correct/incorrect quiz feedback
+- Final quiz score and percentage
+- Notes-only AI generation
+- Structured JSON response validation
+- Error handling for invalid AI responses
+- Responsive dark-mode interface
 
-  progress bar on top (card 3 of 10)
+## How It Works
 
-- A quiz screen: MCQs with instant right/wrong
+1. The user pastes their study notes.
+2. The notes are sent to the AI generation system.
+3. The AI returns structured flashcard and quiz data.
+4. The application validates the returned JSON.
+5. Exactly 10 flashcards and 5 quiz questions are displayed.
+6. The user studies the flashcards and completes the quiz.
+7. The application provides instant feedback and a final score.
 
-  feedback and a final score page
+## AI Reliability
 
-- Dark mode, mobile-first, minimal design
+The generation prompt instructs the AI to use only information present in the user's notes and not add outside information.
 
-Use dummy data first. I will connect AI later.
+The application also validates the structure and required counts of the AI response before displaying the generated content.
 
-This project was built with [Lovable](https://lovable.dev).
+## Testing
 
-**Live app**: https://flash-mastermind.lovable.app
+The application was tested with:
 
-## Build with Lovable
+- OS — CPU Scheduling
+- DBMS — Normalization
+- OOP — Polymorphism
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/6125acf3-bad2-4d98-abf7-8e755c4c2b6f).
+Each test was checked for flashcard generation, quiz generation, interaction, and scoring.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+## Live Demo
 
-## Development
+https://flash-mastermind.lovable.app
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+## Project Status
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
+Completed and deployed as a portfolio project.
